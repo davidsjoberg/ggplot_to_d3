@@ -14,7 +14,6 @@ ggplot(df, aes(drat, qsec)) +
 ![](readme_files/figure-commonmark/unnamed-chunk-1-1.png)
 
 ``` {ojs}
-//| code-fold: true
 d3 = require("d3@7")
 
 function small_grid(A) {
