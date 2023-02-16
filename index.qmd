@@ -6,12 +6,12 @@ format:
     code-fold: true
 ---
 
-In this document some standard ggplot2 plots are replicated in D3.
+In this document some standard ggplot2 plots are replicated in D3. Better viewed in landscape mode.
 
 ```{r prep}
 #| output: false
 #| include: false
-#| message: false
+#| message: falsexd   f  2!"< 1" 
 #| warning: false
 #| error: false
 library(tidyverse)
@@ -29,7 +29,10 @@ jsonlite::write_json(df, "data/scatter.json")
 
 ```{r}
 ggplot(df, aes(drat, qsec)) +
-  geom_point()
+  geom_point() + 
+  labs(title = "Scatter",
+  subtitle = "This is a basic ggplot2 chart",
+  caption = "By David Sjoberg")
 ```
 
 #### D3
@@ -37,11 +40,26 @@ ggplot(df, aes(drat, qsec)) +
 ```{ojs}
 d3 = require("d3@7")
 
-function small_grid(A) {
+// function small_grid(A, extent) {
+//   let middle_pos = []
+//   for (let i = 0; i < (A.length - 1); i++) {
+//     let diff = A[i+1]-A[i]
+//     middle_pos.push(A[i] + diff/2)
+//   }
+//   return middle_pos
+//   }
+
+  function small_grid(A, domain) {
   let middle_pos = []
   for (let i = 0; i < (A.length - 1); i++) {
     let diff = A[i+1]-A[i]
     middle_pos.push(A[i] + diff/2)
+  }
+  if ((A[0] - (middle_pos[0]-A[0])) > domain[0]) {
+      middle_pos.unshift(A[0] - (middle_pos[0]-A[0]))
+  }
+  if ((A[A.length] + (A[A.length] - middle_pos[middle_pos.length])) < domain[1]) {
+      middle_pos.push(A[A.length] + (A[A.length] - middle_pos[middle_pos.length]))
   }
   return middle_pos
   }
@@ -56,7 +74,7 @@ scatter = {
     let dimensions = {
     width: width,
     height: width / 1.4,
-    marginTop: width / 40,
+    marginTop: width / 15,
     marginRight: width / 30,
     marginBottom: width / 10,
     marginLeft: width / 12
@@ -116,7 +134,54 @@ scatter = {
       .style("font-size", "12px")
       .style("color", "grey")
 
+    //// x axis label
+    svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", dimensions.marginLeft + dimensions.ctrWidth/2)
+    .attr("y", dimensions.marginTop + dimensions.ctrHeight + dimensions.marginBottom * .5)
+    .style('font-size', '14px')
+    .style('fill', '1d1d1d')
+    .text("drat")
+
+    //// Y axis label
+    svg.append("text")
+    .attr("text-anchor", "middle")
+    .attr("transform", "rotate(-90)")
+    .attr("y", dimensions.marginLeft * .5)
+    .attr("x", -dimensions.marginTop - dimensions.ctrHeight / 2)
+    .style('font-size', '14px')
+    .style('fill', '1d1d1d')
+    .text("qsec")
+
+
     // Panel
+      //// title
+    svg.append("text")
+      .attr("text-anchor", "start")
+      .attr("y", dimensions.marginTop * .35)
+      .attr("x", dimensions.marginLeft)
+      .style('font-size', '20px')
+      .style('fill', '1d1d1d')
+      .text("Scatter")
+
+      //// subtitle
+    svg.append("text")
+      .attr("text-anchor", "start")
+      .attr("y", dimensions.marginTop * .8)
+      .attr("x", dimensions.marginLeft)
+      .style('font-size', '16px')
+      .style('fill', '1d1d1d')
+      .text("This is a basic D3 chart")
+
+      //// caption
+    svg.append("text")
+      .attr("text-anchor", "end")
+      .attr("y", dimensions.marginTop + dimensions.ctrHeight + dimensions.marginBottom * .8)
+      .attr("x", dimensions.marginLeft + dimensions.ctrWidth)
+      .style('font-size', '12px')
+      .style('fill', '1d1d1d')
+      .text("By David Sjoberg")
+
     ctr.append("rect")
       .attr("width", dimensions.ctrWidth)
       .attr("height", dimensions.ctrHeight)
@@ -137,7 +202,7 @@ scatter = {
       .style('stroke', 'white')
       .style('stroke-width', .5)
       .selectAll('line')
-      .data(small_grid(xScale.ticks(5)))
+      .data(small_grid(xScale.ticks(5), xScale.domain()))
       .join('line')
       .attr('x1', d => xScale(d))
       .attr('x2', d => xScale(d))
@@ -159,7 +224,7 @@ scatter = {
           .style('stroke', 'white')
           .style('stroke-width', 0.5)
           .selectAll('line')
-          .data(small_grid(yScale.ticks(4)))
+          .data(small_grid(yScale.ticks(4), yScale.domain()))
           .join('line')
           .attr('y1', d => yScale(d))
           .attr('y2', d => yScale(d))
@@ -179,6 +244,8 @@ scatter = {
       .attr('cx', d => xScale(xAccessor(d)))
       .attr('cy', d => yScale(yAccessor(d)))
       .attr('r', 3)
+
+
     
     return svg.node();
 
