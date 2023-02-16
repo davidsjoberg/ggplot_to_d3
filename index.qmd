@@ -54,12 +54,12 @@ scatter = {
   
     // Dimensions
     let dimensions = {
-    width: 700,
-    height: 500,
-    marginTop: 5,
-    marginRight: 30,
-    marginBottom: 30,
-    marginLeft: 30
+    width: width,
+    height: width / 1.5,
+    marginTop: width / 40,
+    marginRight: width / 20,
+    marginBottom: width / 20,
+    marginLeft: width / 20
     };
     
     dimensions.ctrWidth = dimensions.width - dimensions.marginLeft - dimensions.marginRight
