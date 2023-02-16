@@ -55,11 +55,11 @@ scatter = {
     // Dimensions
     let dimensions = {
     width: width,
-    height: width / 1.5,
+    height: width / 1.4,
     marginTop: width / 40,
-    marginRight: width / 40,
+    marginRight: width / 30,
     marginBottom: width / 10,
-    marginLeft: width / 15
+    marginLeft: width / 12
     };
     
     dimensions.ctrWidth = dimensions.width - dimensions.marginLeft - dimensions.marginRight
@@ -97,7 +97,7 @@ scatter = {
     .call(g => g.select(".domain").remove())
 
   yAxisDOM.selectAll("text")
-    .style("font-size", "15px")
+    .style("font-size", "12px")
     .style("color", "grey")
 
   const xAxis = d3.axisBottom(xScale)
@@ -113,7 +113,7 @@ scatter = {
     .call(g => g.select(".domain").remove())
 
     xAxisDOM.selectAll("text")
-      .style("font-size", "15px")
+      .style("font-size", "12px")
       .style("color", "grey")
 
     // Panel
