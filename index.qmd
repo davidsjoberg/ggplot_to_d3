@@ -57,9 +57,9 @@ scatter = {
     width: width,
     height: width / 1.5,
     marginTop: width / 40,
-    marginRight: width / 20,
-    marginBottom: width / 20,
-    marginLeft: width / 20
+    marginRight: width / 40,
+    marginBottom: width / 10,
+    marginLeft: width / 15
     };
     
     dimensions.ctrWidth = dimensions.width - dimensions.marginLeft - dimensions.marginRight
@@ -73,7 +73,7 @@ scatter = {
     const ctr = svg.append("g") // <g>
     .attr(
       "transform",
-      `translate(${dimensions.marginRight}, ${dimensions.marginTop})`
+      `translate(${dimensions.marginLeft}, ${dimensions.marginTop})`
     )
 
     const xScale = d3.scaleLinear()
