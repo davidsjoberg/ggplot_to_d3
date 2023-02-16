@@ -3,9 +3,7 @@ title: "ggplot2 to D3"
 author: "David Sjöberg"
 format:
   html:
-    toc: true
     code-fold: true
-  gfm: default
 ---
 
 In this document some standard ggplot2 plots are replicated in D3.
@@ -27,10 +25,14 @@ jsonlite::write_json(df, "data/scatter.json")
 
 ## Scatterplot
 
+#### ggplot2
+
 ```{r}
 ggplot(df, aes(drat, qsec)) +
   geom_point()
 ```
+
+#### D3
 
 ```{ojs}
 d3 = require("d3@7")
@@ -52,13 +54,16 @@ scatter = {
   
     // Dimensions
     let dimensions = {
-    width: 750,
-    height: 550,
-    margins: 60
+    width: 700,
+    height: 500,
+    marginTop: 5,
+    marginRight: 30,
+    marginBottom: 30,
+    marginLeft: 30
     };
     
-    dimensions.ctrWidth = dimensions.width - dimensions.margins * 2
-    dimensions.ctrHeight = dimensions.height - dimensions.margins * 2
+    dimensions.ctrWidth = dimensions.width - dimensions.marginLeft - dimensions.marginRight
+    dimensions.ctrHeight = dimensions.height - dimensions.marginTop - dimensions.marginBottom
 
     // Draw Image
     const svg = d3.create("svg")
@@ -68,7 +73,7 @@ scatter = {
     const ctr = svg.append("g") // <g>
     .attr(
       "transform",
-      `translate(${dimensions.margins}, ${dimensions.margins})`
+      `translate(${dimensions.marginRight}, ${dimensions.marginTop})`
     )
 
     const xScale = d3.scaleLinear()
