@@ -35,32 +35,7 @@ jsonlite::write_json(df_time_series, "data/time_series.json")
 
 ```
 
-```{ojs}
-//| include: false 
-d3 = require("d3@7")
 
-function small_grid(A, domain) {
-  let middle_pos = []
-  for (let i = 0; i < (A.length - 1); i++) {
-    let diff = A[i+1]-A[i]
-    middle_pos.push(A[i] + diff/2)
-  }
-  // If extra minor is needed before first major grid line
-  if ((A[0] - (middle_pos[0]-A[0])) > domain[0]) {
-    middle_pos.unshift(A[0] - (middle_pos[0]-A[0]))
-  }
-    // If extra minor is needed after last major grid line
-  if ((A[A.length-1] + (A[A.length-1] - middle_pos[middle_pos.length-1])) < domain[1]) {
-      middle_pos.push(A[A.length-1] + (A[A.length-1] - middle_pos[middle_pos.length-1]))
-  }
-  return middle_pos
-  }
-
-function scale_expand(range_array, mult) {
-  let domain = (range_array[1] - range_array[0])
-  return [range_array[0]-domain*mult, range_array[1]+domain*mult]
-}
-```
 
 ## Scatterplot
 
@@ -68,10 +43,7 @@ function scale_expand(range_array, mult) {
 
 ```{r}
 ggplot(df, aes(drat, qsec)) +
-  geom_point() + 
-  labs(title = "Scatter",
-       subtitle = "This is a basic ggplot2 chart",
-       caption = "By David Sjoberg")
+  geom_point()
 ```
 
 
@@ -90,8 +62,8 @@ scatter_with_groups = {
     let dimensions = {
     width: width,
     height: width / 1.4,
-    marginTop: width / 15,
-    marginRight: width / 30,
+    marginTop: width / 60,
+    marginRight: width / 10,
     marginBottom: width / 10,
     marginLeft: width / 12
     };
@@ -111,12 +83,12 @@ scatter_with_groups = {
     )
 
     const xScale = d3.scaleLinear()
-      .domain(d3.extent(data, xAccessor))
+      .domain(scale_expand(d3.extent(data, xAccessor), 0.05))
       .range([0, dimensions.ctrWidth])
       .nice()
 
     const yScale = d3.scaleLinear()
-      .domain(d3.extent(data, yAccessor))
+      .domain(scale_expand(d3.extent(data, yAccessor), 0.05))
       .range([dimensions.ctrHeight, 0])
       .nice()
 
@@ -171,32 +143,6 @@ scatter_with_groups = {
 
 
     // Panel
-      //// title
-    svg.append("text")
-      .attr("text-anchor", "start")
-      .attr("y", dimensions.marginTop * .35)
-      .attr("x", dimensions.marginLeft)
-      .style('font-size', '20px')
-      .style('fill', '1d1d1d')
-      .text("Scatter")
-
-      //// subtitle
-    svg.append("text")
-      .attr("text-anchor", "start")
-      .attr("y", dimensions.marginTop * .8)
-      .attr("x", dimensions.marginLeft)
-      .style('font-size', '16px')
-      .style('fill', '1d1d1d')
-      .text("This is a basic D3 chart")
-
-      //// caption
-    svg.append("text")
-      .attr("text-anchor", "end")
-      .attr("y", dimensions.marginTop + dimensions.ctrHeight + dimensions.marginBottom * .8)
-      .attr("x", dimensions.marginLeft + dimensions.ctrWidth)
-      .style('font-size', '12px')
-      .style('fill', '1d1d1d')
-      .text("By David Sjoberg")
 
     ctr.append("rect")
       .attr("width", dimensions.ctrWidth)
@@ -784,3 +730,42 @@ line = {
 
 }
 ```
+
+
+
+
+
+##### Utility functions
+
+```{ojs}
+d3 = require("d3@7")
+
+function small_grid(A, domain) {
+  let middle_pos = []
+  for (let i = 0; i < (A.length - 1); i++) {
+    let diff = A[i+1]-A[i]
+    middle_pos.push(A[i] + diff/2)
+  }
+  // If extra minor is needed before first major grid line
+  if ((A[0] - (middle_pos[0]-A[0])) > domain[0]) {
+    middle_pos.unshift(A[0] - (middle_pos[0]-A[0]))
+  }
+    // If extra minor is needed after last major grid line
+  if ((A[A.length-1] + (A[A.length-1] - middle_pos[middle_pos.length-1])) < domain[1]) {
+      middle_pos.push(A[A.length-1] + (A[A.length-1] - middle_pos[middle_pos.length-1]))
+  }
+  return middle_pos
+  }
+
+function scale_expand(range_array, mult) {
+  let domain = (range_array[1] - range_array[0])
+  return [range_array[0]-domain*mult, range_array[1]+domain*mult]
+}
+```
+
+## ToDo
+* Order of groups
+* ggplot colors
+* lines in legend
+* (IDEA) have mini version of plot in legend
+* (grammer of layout) Don't restrict the user to standard setup
