@@ -604,6 +604,7 @@ line = {
 
   const xAxis = d3.axisBottom(xScale)
     .tickSizeOuter(0)
+    .tickFormat(d3.format("1"))
 
   const xAxisDOM = ctr.append('g')
     .style(
@@ -624,7 +625,7 @@ line = {
     .attr("y", dimensions.marginTop + dimensions.ctrHeight + dimensions.marginBottom * .8)
     .style('font-size', '14px')
     .style('fill', '1d1d1d')
-    .text("drat")
+    .text("year")
 
     //// Y axis label
     svg.append("text")
@@ -634,7 +635,7 @@ line = {
     .attr("x", -dimensions.marginTop - dimensions.ctrHeight / 2)
     .style('font-size', '14px')
     .style('fill', '1d1d1d')
-    .text("qsec")
+    .text("magic_number")
 
 
     // Panel
@@ -774,9 +775,9 @@ line = {
       .attr("text-anchor", "start")
       .attr("y", -2 * size -5)
       .attr("x", dimensions.marginRight / 5 - 10)
-      .style('font-size', '14px')
+      .style('font-size', '15px')
       .style('fill', '1d1d1d')
-      .text("cyl")
+      .text("character")
 
     
     return svg.node();
